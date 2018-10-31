@@ -21,6 +21,7 @@ class TableStructure
     $tableStructure = $this->tableStructure;
     $tableStructure = $this->setColumnsDefault($tableStructure, $this->model);
     $tableStructure['table_name'] = $this->model->getTable();
+    $tableStructure['validation_required'] = true;
     $tableStructure = $this->initForeignTableStructure($tableStructure);
     $this->tableStructure = $tableStructure;
   }
@@ -34,6 +35,7 @@ class TableStructure
         $foreignTableStructure['table_name'] = str_plural($foreignTableName);
         $foreignTableStructure['multiple'] = str_plural($foreignTableName) == $foreignTableName ? true : false;
         $foreignTableStructure['tree_map'] = $treeMap;
+        $foreignTableStructure['validation_required'] = isset($foreignTableStructure['validation_required']) ? $foreignTableStructure['validation_required'] : true;
         $tableStructure['foreign_tables'][$foreignTableName] = $this->initForeignTableStructure($foreignTableStructure, $treeMap);
         $tableStructure['foreign_tables'][$foreignTableName]['is_child'] = false;
         if(isset($tableStructure['foreign_tables'][$foreignTableName]['columns'][str_singular($tableStructure['table_name'])."_id"])){ // check if foreign table is child or parent

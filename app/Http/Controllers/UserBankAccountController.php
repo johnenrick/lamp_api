@@ -17,6 +17,9 @@ class UserBankAccountController extends GenericController
   }
 
   function change(Request $request){
+    if(!$this->checkAuthenticationRequirement(true)){
+      return $this->responseGenerator->generate();
+    }
     $requestData = $request->all();
     $validation = new Core\GenericFormValidation($this->tableStructure, "create");
 
@@ -24,9 +27,8 @@ class UserBankAccountController extends GenericController
       $genericDelete = new Core\GenericDelete($this->tableStructure, $this->model);
       $condition = [[
         "column" => "user_id",
-        "value" => $requestData['user_id']
+        "value" => $this->user['id']
       ]];
-      $genericDelete->delete(null, $condition);
       $genericCreate = new Core\GenericCreate($this->tableStructure, $this->model);
       $this->responseGenerator->setSuccess($genericCreate->create($requestData));
     }else{

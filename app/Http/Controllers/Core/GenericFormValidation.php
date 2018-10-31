@@ -48,11 +48,16 @@ class GenericFormValidation extends Controller
 
               break;
             case "required":
-              if($this->apiOperation == "create"){
-                $finalizedRule[] = $rule;
+              if($foreignTableName && !$tableStructure['validation_required']){
+
               }else{
-                $finalizedRule[] = 'min:1';
+                if($this->apiOperation == "create"){
+                  $finalizedRule[] = $rule;
+                }else{
+                  $finalizedRule[] = 'min:1';
+                }
               }
+
 
               break;
             case "required_with":

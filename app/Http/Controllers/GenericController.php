@@ -34,6 +34,7 @@ class GenericController extends Controller
     public $tableStructure = [];
     public $model;
     public $responseGenerator;
+    public $user = [];
     public $basicOperationAuthRequired = [
       "create" => true,
       "retrieve" => true,
@@ -61,7 +62,9 @@ class GenericController extends Controller
       return $this->responseGenerator->generate();
     }
     public function retrieve(Request $request){
-      $validator = Validator::make($request->all(), ["select" => "required|array|min:1"]);
+      // printR($request->all());
+      $requestArray = $request->all();
+      $validator = Validator::make($requestArray, ["select" => "required|array|min:1"]);
       if($validator->fails()){
         $this->responseGenerator->setFail([
           "code" => 1,
@@ -72,11 +75,13 @@ class GenericController extends Controller
       if(!$this->checkAuthenticationRequirement($this->basicOperationAuthRequired["retrieve"])){
         return $this->responseGenerator->generate();
       }
-      $genericRetrieve = new Core\GenericRetrieve($this->tableStructure, $this->model, $request->all());
+      $genericRetrieve = new Core\GenericRetrieve($this->tableStructure, $this->model, $requestArray);
       $this->responseGenerator->setSuccess($genericRetrieve->executeQuery());
       if($genericRetrieve->totalResult != null){
         $this->responseGenerator->setTotalResult($genericRetrieve->totalResult);
       }
+      $this->responseGenerator->addDebug("Total Result", $genericRetrieve->totalResult);
+      $this->responseGenerator->addDebug("inputs", $requestArray);
       return $this->responseGenerator->generate();
     }
 
@@ -145,6 +150,9 @@ class GenericController extends Controller
         ]);
         return false;
       }else{
+        if($authRequired){
+          $this->user = auth()->user()->toArray();
+        }
         return true;
       }
     }

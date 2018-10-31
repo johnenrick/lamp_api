@@ -15,38 +15,42 @@ use Illuminate\Http\Request;
 Route::post('/', function(){
   return 'API POST'. str_plural('status');
 });
-Route::get('/', function(){
+Route::post('/', function(){
   $r = ["test" => null];
   echo gettype("");
   return 'API GET';
 });
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->post('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::post('/user/create', 'UserController@create');
-Route::get('/user/retrieve', 'UserController@retrieve');
-Route::patch('/user/update', 'UserController@update');
-Route::patch('/user/change-password', 'UserController@changePassword');
+Route::post('/user/retrieve', 'UserController@retrieve');
+Route::post('/user/update', 'UserController@update');
+Route::post('/user/change-password', 'UserController@changePassword');
 
 Route::post('/user/create', 'UserController@create');
 
 Route::post('/client-account/change-status', 'ClientAccountController@changeStatus');
 Route::post('/client-account/create', 'ClientAccountController@create');
-Route::get('/client-account/retrieve', 'ClientAccountController@retrieve');
-Route::patch('/client-account/update', 'ClientAccountController@update');
-Route::delete('/client-account/delete', 'ClientAccountController@delete');
+Route::post('/client-account/retrieve', 'ClientAccountController@retrieve');
+Route::post('/client-account/update', 'ClientAccountController@update');
+Route::post('/client-account/delete', 'ClientAccountController@delete');
 
 Route::post('/user-bank-account/change', 'UserBankAccountController@change');
 Route::post('/user-bank-account/create', 'UserBankAccountController@create');
-Route::get('/user-bank-account/retrieve', 'UserBankAccountController@retrieve');
-Route::patch('/user-bank-account/update', 'UserBankAccountController@update');
-Route::delete('/user-bank-account/delete', 'UserBankAccountController@delete');
+Route::post('/user-bank-account/retrieve', 'UserBankAccountController@retrieve');
+Route::post('/user-bank-account/update', 'UserBankAccountController@update');
+Route::post('/user-bank-account/delete', 'UserBankAccountController@delete');
 
 Route::post('/client-account-diary/create', 'ClientAccountDiaryController@create');
-Route::get('/client-account-diary/retrieve', 'ClientAccountDiaryController@retrieve');
-Route::patch('/client-account-diary/update', 'ClientAccountDiaryController@update');
-Route::delete('/client-account-diary/delete', 'ClientAccountDiaryController@delete');
+Route::post('/client-account-diary/retrieve', 'ClientAccountDiaryController@retrieve');
+Route::post('/client-account-diary/update', 'ClientAccountDiaryController@update');
+Route::post('/client-account-diary/delete', 'ClientAccountDiaryController@delete');
+
+Route::post('/client-account-status/create', 'ClientAccountStatusController@create');
+Route::post('/client-account-status/retrieve', 'ClientAccountStatusController@retrieve');
+Route::post('/client-account-status/update', 'ClientAccountStatusController@update');
 
 Route::group([
 

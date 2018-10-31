@@ -22,4 +22,10 @@ class UserInformation extends GenericModel
     'full_address' => "CONCAT(address, ', ', city, ', ', province)"
   ];
   public $validationRuleNotRequired = ['middle_name'];
+  public function systemGenerateValue($entry){
+    if($this->user()){
+      $entry['user_id'] = $this->user("id");
+    }
+    return $entry;
+  }
 }

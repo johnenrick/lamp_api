@@ -15,16 +15,19 @@ class UserController extends GenericController
         'columns' => [
         ],
         'foreign_tables' => [
-          'user_information' => []
-          // 'user_bank_account' => []
+          'user_information' => [],
+          'user_bank_account' => [
+            'validation_required' => false
+          ]
         ]
       ];
       $this->basicOperationAuthRequired["create"] = false;
       $this->initGenericController();
     }
     public function changePassword(Request $request){
-      if(auth()->user() == null){
-        return "You are not allowed here!";
+      if(!auth()->user()){
+        $this->responseGenerator->setFail(["code" => 2, "message" => "Not Logged In"]);
+        return $this->responseGenerator->generate();
       }
       $requestArray = $request->all();
       $validationRules = $this->model->getValidationRule();

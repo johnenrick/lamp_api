@@ -32,6 +32,6 @@ class User extends GenericModel
     }
     public function user_bank_account()
     {
-        return $this->hasOne('App\userBankAccount');
+        return $this->hasOne('App\userBankAccount')->orderBy('created_at', 'desc');
     }
 }

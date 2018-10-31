@@ -13,7 +13,7 @@ class ClientAccount extends GenericModel
       'client_account_status_id'
     ];
     public function systemGenerateValue($data){
-      if(!isset($data['id']) || $data['id']){
+      if(!isset2('id', $data) || !$data['id']){
         $data['client_account_status_id'] = 1;
       }
       return $data;
@@ -29,5 +29,9 @@ class ClientAccount extends GenericModel
     public function client_account_status_histories()
     {
         return $this->hasMany('App\ClientAccountStatusHistory');
+    }
+    public function client_account_status()
+    {
+        return $this->belongsTo('App\ClientAccountStatus');
     }
 }

@@ -18,11 +18,11 @@ class UserBankAccount extends GenericModel
     'account_number' => 'required|min:13'
 
   ];
-  public function systemGenerateValue($entry){
-    if(!isset($entry['id'])){
-      $entry['verified'] = 0;
-    }
-    return $entry;
+  protected $validationRuleNotRequired = ['user_id', 'verified'];
+  public function systemGenerateValue($data){
+    $data['verified'] = 0;
+    $data['user_id'] = $this->user("id");
+    return $data;
   }
-  protected $validationRuleNotRequired = ['verified'];
+
 }

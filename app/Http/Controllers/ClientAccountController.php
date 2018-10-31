@@ -14,6 +14,9 @@ class ClientAccountController extends GenericController
       'columns' => [
       ],
       'foreign_tables' => [
+        'client_account_status' => [
+          "validation_required" => false
+        ],
         'client_account_contact_details' => [],
         'client_account_status_histories' => []
       ]
@@ -47,11 +50,13 @@ class ClientAccountController extends GenericController
         "client_account_id" => $data["id"],
         "content" => json_encode([
           "new_status" => $data["client_account_status_id"],
-          "date" => null,
-          "type" => 3
-        ])
+          "date" => null
+        ]),
+        "type" => 3
       ]);
-      $this->responseGenerator->setSuccess($statusHistorySaved);
+      $resultObject = $this->createUpdateEntry($data, "update");
+      $this->responseGenerator->setSuccess($resultObject['success']);
+      $this->responseGenerator->setFail($resultObject['fail']);
     }
 
     return $this->responseGenerator->generate();

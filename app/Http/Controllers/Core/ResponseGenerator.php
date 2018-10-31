@@ -11,6 +11,7 @@ class ResponseGenerator extends Controller
     private $fail = false;
     private $response = [];
     private $totalResult = null;
+    private $debugMessages = [];
     public function __construct(){
 
     }
@@ -23,7 +24,11 @@ class ResponseGenerator extends Controller
     public function setTotalResult($totalResult){
       $this->totalResult = $totalResult;
     }
+    public function addDebug($name, $message){
+      $this->debugMessages[$name] = $message;
+    }
     public function generate(){
+
       if($this->fail){
         $this->response = ['error' => $this->fail];
         $errorCode = 422;
@@ -35,6 +40,7 @@ class ResponseGenerator extends Controller
 
       }else{
         $this->response = ['data'=> $this->success];
+        $this->response['debug'] = $this->debugMessages;
         ($this->totalResult) ? $this->response['total_result'] = $this->totalResult : null;
         return response()->json($this->response, 200);
       }

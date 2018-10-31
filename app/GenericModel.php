@@ -86,6 +86,7 @@ class GenericModel extends Model
   }
   public function createEntry($entry){
     $entry = $this->systemGenerateValue($entry);
+
     if($entry == null){
       echo "System Generate Value has no returned data!";
       exit();
@@ -130,7 +131,7 @@ class GenericModel extends Model
     unset($currentData[0]['deleted_at']);
     return $this->where("id", $id)->update($currentData[0]);
   }
-  public function deleteEntry($id){
+  public function deleteEntry($id = null){
     if($id){
       return $this->where("id", $id)->delete();
     }else{
