@@ -10,11 +10,15 @@ class ClientAccount extends GenericModel
       'client_account_status_id' => 'required|enum'
     ];
     protected $validationRuleNotRequired = [
-      'client_account_status_id'
+      'client_account_status_id',
+      'user_id'
     ];
     public function systemGenerateValue($data){
       if(!isset2('id', $data) || !$data['id']){
         $data['client_account_status_id'] = 1;
+      }
+      if($this->user('user_type_id') != 1 || !isset2('id', $data) || !$data['id']){
+        $data['user_id'] = $this->user('id');
       }
       return $data;
     }

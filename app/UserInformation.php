@@ -23,9 +23,9 @@ class UserInformation extends GenericModel
   ];
   public $validationRuleNotRequired = ['middle_name'];
   public function systemGenerateValue($entry){
-    if($this->user()){
-      $entry['user_id'] = $this->user("id");
-    }
+    // if(isset2('id', $entry) && $this->user()){
+    //   $entry['user_id'] = $this->user("id");
+    // }
     return $entry;
   }
 }

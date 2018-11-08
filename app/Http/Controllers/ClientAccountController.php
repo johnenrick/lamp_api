@@ -23,6 +23,18 @@ class ClientAccountController extends GenericController
     ];
     $this->initGenericController();
   }
+  public function systemGenerateRetrieveParameter($data){
+    if($this->user('user_type_id') != 1){
+      if(!isset($data['condition'])){
+        $data['condition'] = [];
+      }
+      $data['condition'][] = [
+        "column" => "user_id",
+        "value" => $this->user('id')
+      ];
+    }
+    return $data;
+  }
   public function changeStatus(Request $request){
     if(!auth()->user()){
       $this->responseGenerator->setFail(["code" => 2, "message" => "Not Logged In"]);

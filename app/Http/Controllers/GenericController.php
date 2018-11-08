@@ -46,6 +46,9 @@ class GenericController extends Controller
       $this->tableStructure = (new Core\TableStructure($this->tableStructure, $this->model))->getStructure();
       $this->responseGenerator = new Core\ResponseGenerator();
     }
+    public function systemGenerateRetrieveParameter($data){
+      return $data;
+    }
     /**
       Default create resource. Execute create operation.
       Parameters
@@ -63,7 +66,7 @@ class GenericController extends Controller
     }
     public function retrieve(Request $request){
       // printR($request->all());
-      $requestArray = $request->all();
+      $requestArray = $this->systemGenerateRetrieveParameter($request->all());
       $validator = Validator::make($requestArray, ["select" => "required|array|min:1"]);
       if($validator->fails()){
         $this->responseGenerator->setFail([
@@ -154,6 +157,18 @@ class GenericController extends Controller
           $this->user = auth()->user()->toArray();
         }
         return true;
+      }
+    }
+    public function user($key = "id"){
+      if(auth()->user()){
+        $user = auth()->user()->toArray();
+        if($key){
+          return $user[$key];
+        }else{
+          return $user;
+        }
+      }else{
+        return null;
       }
     }
 }
