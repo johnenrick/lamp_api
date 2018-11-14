@@ -24,15 +24,11 @@ class ClientAccount extends GenericModel
     }
 
     protected $formulatedColumn = [
-      'full_address' => "CONCAT(address, ', ', city, ', ', province)"
+      'full_address' => "CONCAT(address, ', ', city, ', ', province)",
     ];
     public function client_account_contact_details()
     {
         return $this->hasMany('App\ClientAccountContactDetail');
-    }
-    public function client_account_status_histories()
-    {
-        return $this->hasMany('App\ClientAccountStatusHistory');
     }
     public function client_account_status()
     {

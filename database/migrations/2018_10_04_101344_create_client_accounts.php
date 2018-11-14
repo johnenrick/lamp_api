@@ -15,6 +15,7 @@ class CreateClientAccounts extends Migration
     {
       Schema::create('client_accounts', function(Blueprint $table){
         $table->increments('id');
+        $table->unsignedInteger('user_id');
         $table->string('company_name');
         $table->string('business_nature');
         $table->string('company_connection')->comment("How do you know the company / person");
@@ -22,9 +23,10 @@ class CreateClientAccounts extends Migration
         $table->string('city', 50);
         $table->string('province', 50);
         $table->string('remarks')->comment("Note/s or Instruction/s or to approach company or contact person");
-        $table->unsignedInteger('client_account_status_id')->default(0);  
+        $table->unsignedInteger('client_account_status_id')->default(0);
         $table->timestamps();
         $table->softDeletes();
+        $table->foreign('user_id')->references('id')->on('users');
       });
     }
 

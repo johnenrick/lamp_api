@@ -26,6 +26,7 @@ class User extends GenericModel
       }
       return $data;
     }
+    
     public function user_information()
     {
         return $this->hasOne('App\UserInformation');

@@ -40,7 +40,7 @@ class ClientAccountController extends GenericController
       $this->responseGenerator->setFail(["code" => 2, "message" => "Not Logged In"]);
       return $this->responseGenerator->generate();
     }
-    $statuses = (new App\ClientAccountStatuses())->select('id', 'has_calendar')->get()->toArray();
+    $statuses = (new App\ClientAccountStatuses())->select('id', 'has_schedule')->get()->toArray();
     $data = $request->all();
     // printR($data);
     $validator = $this->validator($data, [
@@ -48,7 +48,8 @@ class ClientAccountController extends GenericController
       "client_account_status_id" => [
         "required",
         "exists:client_account_statuses,id",
-      ]
+      ],
+      "schedule" => $statuses['has_schedule'] ? "required" : ""
     ]);
     if($validator->fails()){
       $this->responseGenerator->setFail([
@@ -61,10 +62,12 @@ class ClientAccountController extends GenericController
         "user_id" => auth()->user()->id,
         "client_account_id" => $data["id"],
         "content" => json_encode([
-          "new_status" => $data["client_account_status_id"],
+          "message" => isset($data["note"]) ? $data["note"] : null,
+          "new_status" => isset($data["client_account_status_id"]) ? $data["client_account_status_id"] : null,
           "date" => null
         ]),
-        "type" => 3
+        "type" => 3,
+        "schedule" => isset($data["schedule"]) ? $data["schedule"] : null,
       ]);
       $resultObject = $this->createUpdateEntry($data, "update");
       $this->responseGenerator->setSuccess($resultObject['success']);

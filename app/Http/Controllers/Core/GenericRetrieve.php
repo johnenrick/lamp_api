@@ -86,31 +86,24 @@ class GenericRetrieve extends Controller
     }
     public function addConditionStatement($queryModel, $requestQueryCondition, &$leftJoinedTable, $tableStructure){
       foreach($requestQueryCondition as $condition){
-        $column;
-        if(isset($tableStructure['columns'][$condition['column']]['formula'])){
-          $column = $tableStructure['columns'][$condition['column']]['formula'];
-        }else{
-          $column = $condition['column'];
-          $queryModel = $this->addLeftJoin($queryModel, $leftJoinedTable, $column, $tableStructure);
-        }
+        $column = $condition['column'];
+
+        $queryModel = $this->addLeftJoin($queryModel, $leftJoinedTable, $column, $tableStructure); // the column is passed by address because the function will change the its value
 
         $condition['clause'] = isset($condition['clause']) ? $condition['clause'] : '=';
         switch($condition['clause']){
           default:
-          $queryModel = $queryModel->where($column, $condition['clause'], $condition['value']);
+          $queryModel = $queryModel->where(DB::raw($column), $condition['clause'], $condition['value']);
         }
       }
       return $queryModel;
     }
     public function addSortStatement($queryModel, $requestQuerySort, &$leftJoinedTable, $tableStructure){
       foreach($requestQuerySort as $sort){
-        $column;
-        if(isset($tableStructure['columns'][$sort['column']]['formula'])){
-          $column = $tableStructure['columns'][$sort['column']]['formula'];
-        }else{
-          $column = $sort['column'];
-          $queryModel = $this->addLeftJoin($queryModel, $leftJoinedTable, $column, $tableStructure);
-        }
+        $column = $sort['column'];
+
+        $queryModel = $this->addLeftJoin($queryModel, $leftJoinedTable, $column, $tableStructure); // the column is passed by address because the function will change the its value
+        // printR($tableStructure, 'table structure');
         $queryModel = $queryModel->orderBy(DB::raw($column), $sort['order']);
       }
       return $queryModel;
@@ -123,6 +116,7 @@ class GenericRetrieve extends Controller
       $columnSplitted = explode(".", $column);
       if(count($columnSplitted) == 2){ // table.column
         $table = $columnSplitted[0];
+        $currentColumn = $columnSplitted[1];
         if(in_array($table, $leftJoinedTable)){
           return $queryModel;
         }
@@ -139,11 +133,21 @@ class GenericRetrieve extends Controller
           }
         }
         $leftJoinedTable[] = $tablePlural;
-        $column = $tablePlural.".".$columnSplitted[1];
-      }else{
-        $column = $tableStructure['table_name'].".".$column;
-      }
+        if(isset($tableStructure['foreign_tables'][$table]['columns'][$currentColumn]['formula'])){
+          $column = $tableStructure['foreign_tables'][$table]['columns'][$currentColumn]['formula'];
+        }else{
+          $column = $tablePlural.".".$currentColumn;
+        }
 
+
+      }else{
+        if(isset($tableStructure['columns'][$column]['formula'])){
+          $column = $tableStructure['columns'][$column]['formula'];
+        }else{
+          $column = $tableStructure['table_name'].".".$column;
+        }
+
+      }
       return $queryModel;
     }
     public function removeUnwantedSelectForeignTable($requestQuerySelect, $tableStructure, $parentTable = null){
