@@ -18,6 +18,7 @@ class ClientAccountStatuses extends Migration
         $table->char('description', 20);
         $table->char('color', 10);
         $table->boolean('has_schedule');
+        $table->boolean('is_active');
         // $table->unsignedInteger('status', ['unopened', 'disqualify', 'scheduled', 're_call', 'not_interested', 'acceptance', 'follow_up', 'declined', 'closed']);
         $table->timestamps();
         $table->softDeletes();
