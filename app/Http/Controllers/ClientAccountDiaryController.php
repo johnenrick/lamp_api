@@ -11,6 +11,9 @@ class ClientAccountDiaryController extends GenericController
       'columns' => [
       ],
       'foreign_tables' => [
+        'client_account' => [
+          'is_child' => false
+        ]
       ]
     ];
     // printR(auth()->user()->toArray()););

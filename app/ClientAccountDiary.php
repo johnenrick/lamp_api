@@ -15,4 +15,8 @@ class ClientAccountDiary extends GenericModel
     $data['user_id'] = $this->user("id");
     return $data;
   }
+  public function client_account()
+  {
+      return $this->belongsTo('App\ClientAccount');
+  }
 }

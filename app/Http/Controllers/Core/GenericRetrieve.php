@@ -124,7 +124,6 @@ class GenericRetrieve extends Controller
         $mainTable = $tableStructure['table_name'];
         if(isset($tableStructure['foreign_tables'][$table])){
           if($tableStructure['foreign_tables'][$table]['is_child']){
-            // $queryModel = $queryModel->join($tablePlural, str_plural($mainTable).".id", "=", $tablePlural.".".str_singular($mainTable)."_id");
             $queryModel = $queryModel->join($tablePlural, function($join) use ($mainTable, $tablePlural){
               $join->on(str_plural($mainTable).".id", '=', $tablePlural.".".str_singular($mainTable)."_id");
             });
@@ -156,7 +155,12 @@ class GenericRetrieve extends Controller
         if(is_numeric($selectIndex) && isset($tableStructure['columns'][$select])){ // if column
           $cleanRequestQuery[$select] = null;
         }else if(isset($tableStructure['foreign_tables'][$selectIndex]) && isset($select['select'])){ // if with
-          $cleanRequestQuery[$selectIndex]['select'] = $this->removeUnwantedSelectForeignTable($select['select'], $tableStructure['foreign_tables'][$selectIndex], $tableStructure['table_name']);
+          $parent = $tableStructure['table_name'];
+          if(!($tableStructure['foreign_tables'][$selectIndex]['is_child'])){
+            $cleanRequestQuery[str_singular($selectIndex)."_id"] = null;
+            $parent = null;
+          }
+          $cleanRequestQuery[$selectIndex]['select'] = $this->removeUnwantedSelectForeignTable($select['select'], $tableStructure['foreign_tables'][$selectIndex],  $parent);
           isset($select['condition']) ? $cleanRequestQuery[$selectIndex]['condition'] = $select['condition']: null;
 
         }
@@ -164,6 +168,8 @@ class GenericRetrieve extends Controller
       $cleanRequestQuery['id'] = null;
       if($parentTable){
         $cleanRequestQuery[str_singular($parentTable)."_id"] = null;
+      }else{
+
       }
       return $cleanRequestQuery;
     }
